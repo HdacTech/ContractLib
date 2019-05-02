@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hdac.mapper.ContractMapper">
+	<select id="getBlockHeight" parameterType="map" resultType="long">
+		SELECT	/* [ContractMapper.xml] com.hdac.mapper.ContractMapper.getBlockHeight, 190419 dire */
+			IFNULL(MAX(block_height), -1) AS block_height
+		FROM
+		<choose>
+			<when test='server_type=="M"'>
+			block_height_main
+			</when>
+			<when test='server_type=="S"'>
+			block_height_side
+			</when>
+		</choose>
+	</select>
+
+	<insert id="insertBlockHeight" parameterType="map">
+		/* [ContractMapper.xml] com.hdac.mapper.ContractMapper.insertBlockHeight, 194022 dire */
+		INSERT INTO
+		<choose>
+			<when test='server_type=="M"'>
+			block_height_main
+			</when>
+			<when test='server_type=="S"'>
+			block_height_side
+			</when>
+		</choose>
+		(
+			block_height
+			, create_dt
+		)
+		VALUES
+		(
+			#{block_height}
+			, NOW()
+		)		
+	</insert>
+
+	<insert id="insertTxList" parameterType="map">
+		/* [ContractMapper.xml] com.hdac.mapper.ContractMapper.insertTxList, 190422 dire */
+		INSERT INTO
+		<choose>
+			<when test='server_type=="M"'>
+			grab_main
+			</when>
+			<when test='server_type=="S"'>
+			grab_side
+			</when>
+		</choose>
+		(
+			block_height
+			, txid
+			, create_dt
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=", ">
+		(
+			#{item.block_height}
+			, #{item.txid}
+			, NOW()
+		)
+        </foreach>
+	</insert>
+
+	<select id="getTxList" parameterType="map" resultType="map">
+		SELECT	/* [ContractMapper.xml] com.hdac.mapper.ContractMapper.getTxList, 190422 dire */
+			txid
+			, block_height
+		FROM
+		<choose>
+			<when test='server_type=="M"'>
+			grab_main
+			</when>
+			<when test='server_type=="S"'>
+			grab_side
+			</when>
+		</choose>
+		ORDER BY
+			block_height ASC
+	</select>
+
+	<insert id="insertHandle" parameterType="map">
+		/* [ContractMapper.xml] com.hdac.mapper.ContractMapper.insertHandle, 190422 dire */
+		INSERT INTO
+		<choose>
+			<when test='server_type=="M"'>
+			contract_main_to_side
+			</when>
+			<when test='server_type=="S"'>
+			contract_side_to_main
+			</when>
+		</choose>		 
+		(
+			txid
+			, block_height
+			, type
+			, origin_txid
+			, create_dt
+		)
+		VALUES
+		(
+			#{txid}
+			, #{block_height}
+			, #{type}
+			, #{origin_txid}
+			, NOW()
+		)
+	</insert>
+
+	<delete id="deleteTx" parameterType="map">
+		/* [ContractMapper.xml] com.hdac.mapper.ContractMapper.deleteTx, 190422 dire */
+		DELETE FROM
+		<choose>
+			<when test='server_type=="M"'>
+			grab_main
+			</when>
+			<when test='server_type=="S"'>
+			grab_side
+			</when>
+		</choose>	
+		WHERE
+			txid = #{origin_txid}
+	</delete>
+
+	<insert id="insertRefund" parameterType="map">
+		/* [ContractMapper.xml] com.hdac.mapper.ContractMapper.insertRefund, 190423 dire */
+		INSERT INTO
+		<choose>
+			<when test='server_type=="M"'>
+			refund_main_to_main
+			</when>
+			<when test='server_type=="S"'>
+			refund_side_to_side
+			</when>
+		</choose>		 
+		(
+			txid
+			, block_height
+			, origin_txid
+			, create_dt
+		)
+		VALUES
+		(
+			#{txid}
+			, #{block_height}
+			, #{origin_txid}
+			, NOW()
+		)
+	</insert>
+</mapper>

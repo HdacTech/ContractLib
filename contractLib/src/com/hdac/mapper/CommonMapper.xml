@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hdac.mapper.CommonMapper">
+	<select id="getTokenInfo" resultType="map">
+		SELECT	/* [CommonMapper.xml] com.hdac.mapper.CommonMapper.getTokenInfo, 190418 dire */
+			tokenName
+			, tokenCap
+			, tokenTxid
+			, tokenSwapRatio
+			, host
+			, contractAddress
+		FROM
+			token_info
+		LIMIT
+			1
+	</select>
+
+	<select id="getServiceInfo" resultType="string" parameterType="string">
+		SELECT	/* [CommonMapper.xml] com.hdac.mapper.CommonMapper.getServiceInfo, 190410 dire */
+			value
+		FROM
+			service_config
+		WHERE
+			name = #{name}
+		LIMIT 1
+	</select>
+
+	<select id="getServerInfo" resultType="map" parameterType="string">
+		SELECT	/* [CommonMapper.xml] com.hdac.mapper.CommonMapper.getServerInfo, 190410 dire */
+			rpc_address
+			, rpc_port
+			, ws_port
+			, rpc_user
+			, rpc_password
+			, server_type
+		FROM
+			server_config
+		WHERE
+			server_type = #{serverType}
+		LIMIT 1
+	</select>
+
+	<select id="getSeedList" resultType="string">
+		SELECT	/* [CommonMapper.xml] com.hdac.mapper.CommonMapper.getSeedList, 190130 dire */
+			word
+		FROM
+			root_seed
+		ORDER BY
+			seq ASC
+	</select>
+</mapper>

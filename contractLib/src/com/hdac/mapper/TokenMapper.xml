@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hdac.mapper.TokenMapper">
+	<insert id="insertTokenNo" useGeneratedKeys="true" parameterType="map" keyProperty="seq_val">
+    	<selectKey resultType="long" keyProperty="seq_val" order="BEFORE">
+			SELECT IFNULL(MAX(seq_val), 0) + 1 FROM tb_seq_token_info
+		</selectKey>
+		/* [TokenMapper.xml] com.hdac.mapper.TokenMapper, 190130 dire */
+		INSERT INTO tb_seq_token_info
+		(
+			seq_val
+		)
+		VALUES
+		(
+			#{seq_val}
+		)
+	</insert>
+
+	<insert id="insertTokenInfo" parameterType="map">
+		/* [TokenMapper.xml] com.hdac.mapper.TokenMapper.insertTokenInfo, 190424 dire */
+		INSERT INTO token_info
+		(
+			no
+			, tokenName
+			, tokenCap
+			, tokenSwapRatio
+			, host
+			, tokenTxid
+			, binaryPath
+			, contractAddress
+			, contractTxid
+			, anchoringAddress
+			, recordAddress
+		)
+		VALUES
+		(
+			#{tokenNo}
+			, #{tokenName}
+			, #{tokenCap}
+			, #{tokenSwapRatio}
+			, #{serverInfo}
+			, #{tokenTxid}
+			, #{binaryPath}
+			, #{contractAddress}
+			, #{contractTxid}
+			, #{anchoringAddress}
+			, #{recordAddress}
+		)
+	</insert>
+</mapper>
