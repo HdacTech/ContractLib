@@ -55,7 +55,7 @@ public class HdacTokenIssue
 
 		String raw_tx = service.makeRawTransaction(wallet, jsonArray, paramMap);
 
-		// raw transaction 전송
+		// send raw transaction
 		return service.sendRawTransaction(raw_tx, this.mainChain);
 	}
 

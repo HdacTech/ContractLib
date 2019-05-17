@@ -16,6 +16,21 @@ import com.hdac.service.RpcService;
 import com.hdacSdk.hdacWallet.HdacTransaction;
 import com.hdacSdk.hdacWallet.HdacWallet;
 
+/**
+ * abstract HdacContractHandle class extends HdacContract
+ * (Database SqlSesseion control) 
+ * 
+ * @version 0.8
+ * 
+ * @see     import java.util.ArrayList
+ * @see     import java.util.Iterator
+ * @see     import java.util.List
+ * @see     import java.util.Map
+ * @see     import org.apache.ibatis.session.SqlSession
+ * @see		import org.bitcoinj.core.ECKey
+ * @see     import org.json.JSONArray
+ * @see     import org.json.JSONObject
+ */
 abstract class HdacContractHandle extends HdacContract
 {
 	protected abstract void init();

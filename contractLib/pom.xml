@@ -17,7 +17,16 @@
   </repositories>
 
   <build>
-  	<defaultGoal>install</defaultGoal>
+    <resources>
+      <resource>
+        <directory>src</directory>
+        <includes>
+          <include>**/*.xml</include>
+        </includes>
+      </resource>
+    </resources>
+
+    <defaultGoal>install</defaultGoal>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
       <plugin>

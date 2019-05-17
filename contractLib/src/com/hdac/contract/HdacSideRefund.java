@@ -62,7 +62,7 @@ public class HdacSideRefund extends HdacContractRefund
 	}
 
 	@Override
-	protected void refund(Map<String, Object> map, JSONObject resultObj, String txid, Map<String, Object> config)
+	protected void refund(Map<String, Object> map, JSONObject resultObj, String txid)
 	{
 		refund(this.wallet, map, resultObj, this.tokenInfo, this.sideChain, txid);
 	}
@@ -118,43 +118,21 @@ public class HdacSideRefund extends HdacContractRefund
 		String tokenName		= StringUtil.nvl(tokenInfo.get("tokenName"));
 		String txid				= StringUtil.nvl(tokenInfo.get("tokenTxid"));
 
-		BigInteger balance		= BigInteger.ZERO;
+//		BigInteger balance		= BigInteger.ZERO;
 		BigInteger assetBalance	= BigInteger.ZERO;
 		BigInteger sendAmount	= BigInteger.ZERO;
-
-//		Map<String, BigInteger> sendAmount	= new HashMap<String, BigInteger>();	// asset
 
 		for (JSONObject utxo : utxos)
     	{
 			assetBalance = assetBalance.add(utxo.getJSONArray("assets").getJSONObject(0).getBigDecimal("qty").multiply(BigDecimal.TEN.pow(8)).toBigInteger());
-			balance = balance.add(utxo.getBigDecimal("amount").multiply(BigDecimal.TEN.pow(8)).toBigInteger());
+//			balance = balance.add(utxo.getBigDecimal("amount").multiply(BigDecimal.TEN.pow(8)).toBigInteger());
 
 			transaction.addInput(utxo);
 		}
-//		for (JSONObject utxo : utxos)
-//    	{
-//			balance = balance.add(utxo.getBigDecimal("amount").multiply(BigDecimal.TEN.pow(8)).toBigInteger());
-//			
-//			JSONArray assetArr = utxo.getJSONArray("assets");
-//			int assetArrLength = assetArr.length();
-//			for (int i = 0; i < assetArrLength; i++)
-//			{
-//				JSONObject assetObj = assetArr.getJSONObject(i);
-//				String name = assetObj.getString("name");
-//				BigInteger qty = assetObj.getBigDecimal("qty").multiply(BigDecimal.TEN.pow(8)).toBigInteger();
-//
-//				if (sendAmount.containsKey(name))
-//					qty = qty.add(sendAmount.get(name));
-//
-//				sendAmount.put(name, qty);
-//			}
-//
-//			transaction.addInput(utxo);
-//		}
 
     	System.out.println(utxos);
     	System.out.println("assetBalance : " + assetBalance);
-    	System.out.println("balance : " + balance);
+//    	System.out.println("balance : " + balance);
 
     	JSONArray voutArr = resultObj.getJSONArray("vout");
     	int voutArrLength = voutArr.length();
@@ -219,90 +197,4 @@ public class HdacSideRefund extends HdacContractRefund
 		
 		return true;
 	}
-	
-//	@Override
-//	protected boolean addUnsignedData2(HdacTransaction transaction, Map<String, Object> txMap
-//		, List<Map<String, Object>> senderList, JSONObject resultObj, Map<String, Object> tokenInfo, List<JSONObject> utxos, String dataValue)
-//	{
-//		String remainAddress	= StringUtil.nvl(tokenInfo.get("contractAddress"));
-//		String txid				= StringUtil.nvl(tokenInfo.get("tokenTxid"));
-//
-//		BigInteger balance		= BigInteger.ZERO;
-//		BigInteger assetBalance	= BigInteger.ZERO;
-//		BigInteger sendAmount	= BigInteger.ZERO;
-//
-//		for (JSONObject utxo : utxos)
-//    	{
-//			assetBalance = assetBalance.add(utxo.getJSONArray("assets").getJSONObject(0).getBigDecimal("qty").multiply(BigDecimal.TEN.pow(8)).toBigInteger());
-//			balance = balance.add(utxo.getBigDecimal("amount").multiply(BigDecimal.TEN.pow(8)).toBigInteger());
-//
-//			transaction.addInput(utxo);
-//		}
-//
-//    	System.out.println("assetBalance : " + assetBalance);
-//    	System.out.println("balance : " + balance);
-//		//for checking balance
-//		BigInteger assetRemain = assetBalance;
-//		//BigInteger assetRemain = assetBalance.subtract(assetValue);
-//
-//		JSONArray voutArr = resultObj.getJSONArray("vout");
-//		if (voutArr.length() <= 0)
-//			return false;
-//
-//		sendAmount = voutArr.getJSONObject(0).getBigDecimal("value").multiply(BigDecimal.TEN.pow(8)).toBigInteger();
-//		System.out.println("sendAmount : " + sendAmount);
-//
-//		if (sendAmount.compareTo(BigInteger.ZERO) <= 0)
-//			return false;
-//		if (sendAmount.compareTo(new BigDecimal(dataValue).multiply(BigDecimal.TEN.pow(8)).toBigInteger()) != 0)
-//			return false;
-//		if (assetRemain.compareTo(BigInteger.ZERO) <= 0)
-//			return false;
-//
-//		for (Map<String, Object> map : senderList)
-//		{
-//			System.out.println(map);
-//			String sendAddress		= StringUtil.nvl(map.get("addr"));
-//			BigInteger value		= new BigDecimal(StringUtil.nvl(map.get("value"), "0")).multiply(BigDecimal.TEN.pow(8)).toBigInteger();
-//			BigInteger assetValue	= BigInteger.ZERO;
-//
-//			System.out.println("value : " + value);
-//			if (value.compareTo(sendAmount) > 0)
-//			{
-//				assetValue = getAssetValue(sendAmount, tokenInfo);
-//				sendAmount = BigInteger.ZERO;
-//			}
-//			else
-//			{
-//				assetValue = getAssetValue(value, tokenInfo);
-//				sendAmount = sendAmount.subtract(assetValue);
-//			}
-//
-//			if (assetRemain.compareTo(assetValue) >= 0)
-//				assetRemain = assetRemain.subtract(assetValue);
-//			else
-//			{
-//				assetValue = assetRemain;
-//				assetRemain = BigInteger.ZERO;
-//			}
-//
-//			transaction.addAssetOutput(sendAddress, txid, assetValue.longValue(), 0);
-//
-//			if (sendAmount.compareTo(BigInteger.ZERO) <= 0)
-//				break;
-//			if (assetRemain.compareTo(BigInteger.ZERO) <= 0)
-//				break;
-//		}
-//
-//		if (assetRemain.compareTo(BigInteger.ZERO) > 0)
-//			transaction.addAssetOutput(remainAddress, txid, assetRemain.longValue(), balance.longValue());
-//
-//		return true;
-//	}
-//
-//	private BigInteger getAssetValue(BigInteger value, Map<String, Object> tokenInfo)
-//	{
-//		long swapRatio = Long.parseLong(StringUtil.nvl(tokenInfo.get("tokenSwapRatio"), "0"));
-//		return value.multiply(BigInteger.valueOf(swapRatio));
-//	}
 }

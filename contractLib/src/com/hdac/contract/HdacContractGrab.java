@@ -11,18 +11,39 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.hdac.comm.CipherUtil;
 import com.hdac.comm.HdacUtil;
 import com.hdac.comm.StringUtil;
 import com.hdac.service.ContractService;
 import com.hdac.service.RpcService;
 import com.hdacSdk.hdacWallet.HdacWallet;
 
+/**
+ * abstract HdacContractGrab class extends HdacContract
+ * (Database SqlSesseion control) 
+ * 
+ * @version 0.8
+ * 
+ * @see     import java.math.BigInteger
+ * @see     import java.util.HashMap
+ * @see     import java.util.Iterator
+ * @see     import java.util.List
+ * @see     import java.util.Map
+ * @see     import org.apache.ibatis.session.SqlSession
+ * @see     import org.json.JSONArray
+ * @see     import org.json.JSONException
+ * @see     import org.json.JSONObject
+ */
 abstract class HdacContractGrab extends HdacContract
 {
 	protected abstract void init();
 	protected abstract BigInteger getValueSum(JSONObject voutObj, String tokenName);
 
+	/**
+	 * get current chain block height
+	 * 
+	 * @param chainInfo (Map<String, Object>) set chain info 
+	 * @return    (long) latest block height selected chain 
+	 */		
 	private long getBlockHeight(Map<String, Object> chainInfo)
 	{
 		SqlSession sqlSession = getSqlSession();
@@ -38,6 +59,15 @@ abstract class HdacContractGrab extends HdacContract
 		}
 	}
 
+	/**
+	 * get transaction list associated with contract address
+	 * 
+	 * @param txList (List<Map<String, Object>>) get the list transactions associated with contact address
+	 * @param tokenInfo (Map<String, Object>) get the token information
+	 * @param chainInfo (Map<String, Object>) set the chain information to use
+	 * @param loopCount (long) Number of blocks to get details
+	 * @return    (long) last block height to get details 
+	 */
 	protected long getTxList(List<Map<String, Object>> txList, Map<String, Object> tokenInfo, Map<String, Object> chainInfo, long loopCount)
 	{
 		long blockHeight = getBlockHeight(chainInfo);
@@ -67,6 +97,16 @@ abstract class HdacContractGrab extends HdacContract
 		return blockHeight;
 	}
 
+	/**
+	 * get transaction list associated with contract address
+	 * 
+	 * @param txList (List<Map<String, Object>>) get the list transactions associated with contact address
+	 * @param wallet (HdacWallet) get the wallet with address
+	 * @param obj (JSONObject) set the chain information to use
+	 * @param contractAddress (String) contract address to use 
+	 * @param tokenName (String) token name to use
+	 * @return    (void) 
+	 */
 	private void filterTxList(List<Map<String, Object>> txList, HdacWallet wallet, JSONObject obj, String contractAddress, String tokenName)
 	{
 		JSONArray txArr = obj.getJSONArray("tx");
@@ -87,6 +127,15 @@ abstract class HdacContractGrab extends HdacContract
 		});
 	}
 
+	/**
+	 * get transaction list associated with contractaddress
+	 * 
+	 * @param wallet (HdacWallet) get the wallet with address
+	 * @param txObj (JSONObject) get the transaction information to compare with contract address
+	 * @param contractAddress (String) contract address to use 
+	 * @param tokenName (String) token name to use
+	 * @return    (boolean)  true if the transaction is associated with a contract address
+	 */
 	private boolean isExistAddress(HdacWallet wallet, JSONObject txObj, String contractAddress, String tokenName)
 	{
 		JSONArray vinArr = txObj.getJSONArray("vin");
@@ -100,7 +149,7 @@ abstract class HdacContractGrab extends HdacContract
 			String[] asm = vinObj.getJSONObject("scriptSig").getString("asm").split(" ");
 
 			String publickey = asm[asm.length -1];
-			String vinaddress = wallet.convPubkeyToHdacAddress(CipherUtil.toByteArray(publickey));
+			String vinaddress = wallet.convPubkeyToHdacAddress(StringUtil.toByteArray(publickey));
 			if (contractAddress.equals(vinaddress))
 				return false;
 		}
@@ -131,6 +180,14 @@ abstract class HdacContractGrab extends HdacContract
 		return true;
 	}
 
+	/**
+	 * Insert a transaction in the maria db that is associated with contract address.
+	 * 
+	 * @param list (List<Map<String, Object>> list) the list of transactions associated with contract address
+	 * @param blockHeight (long) get the last blockheight 
+	 * @param chainInfo (Map<String, Object>) set the chain information to use
+	 * @return    (int)  Results inserted into db
+	 */	
 	protected int insertTxList(List<Map<String, Object>> list, long blockHeight, Map<String, Object> chainInfo)
 	{
 		SqlSession sqlSession = null;

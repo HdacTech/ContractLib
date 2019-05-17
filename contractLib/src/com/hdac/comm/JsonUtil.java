@@ -18,8 +18,7 @@ import org.json.JSONObject;
 
 
 /**
- * This class will be moved to the contractlib
- * Deprecated
+ * This class provide json method
  * 
  * @version 0.8
  * 

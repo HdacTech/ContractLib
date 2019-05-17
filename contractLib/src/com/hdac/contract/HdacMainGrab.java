@@ -11,6 +11,21 @@ import org.json.JSONObject;
 
 import com.hdac.service.CommonService;
 
+/**
+ * abstract HdacMainGrab class extends HdacContractGrab
+ * 
+ * @version 0.8
+ * 
+ * @see     import java.math.BigInteger
+ * @see     import java.util.HashMap
+ * @see     import java.util.Iterator
+ * @see     import java.util.List
+ * @see     import java.util.Map
+ * @see     import org.apache.ibatis.session.SqlSession
+ * @see     import org.json.JSONArray
+ * @see     import org.json.JSONException
+ * @see     import org.json.JSONObject
+ */
 public class HdacMainGrab extends HdacContractGrab
 {
 	private Map<String, Object> tokenInfo = null;

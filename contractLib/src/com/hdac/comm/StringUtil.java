@@ -1,7 +1,19 @@
+/* 
+ * Copyright(c) 2018-2019 hdactech.com
+ * Original code was distributed under the MIT software license.
+ *
+ */
 package com.hdac.comm;
 
 import java.text.DecimalFormat;
 
+/**
+ * This class provide String method 
+ * 
+ * @version 0.8
+ * 
+ * @see     java.text.DecimalFormat
+ */
 public class StringUtil
 {
 	public static String nvl(Object obj)
@@ -90,6 +102,16 @@ public class StringUtil
 		return sb.toString();
 	}
 
+	public static String toHexString(byte[] bytes)
+	{
+		StringBuilder sb = new StringBuilder(); 
+		for (byte b : bytes)
+		{
+			sb.append(String.format("%02X", b & 0xff)); 
+		}
+		return sb.toString();
+	}
+
 	public static String hexToString(String hexStr)
 	{
 		if (hexStr == null)
@@ -142,5 +164,15 @@ public class StringUtil
 		buf[6] = (byte)((v >>> 060) & 0xFF);
 		buf[7] = (byte)((v >>> 070) & 0xFF);
 		return buf;
+	}
+
+	public static byte[] toByteArray(String str)
+	{
+		byte[] bytes = new byte[str.length() / 2];
+		for (int i = 0; i < bytes.length; i++)
+		{
+			bytes[i] = (byte)Integer.parseInt(str.substring(i * 2, i * 2 + 2), 16);
+		}
+		return bytes;
 	}
 }

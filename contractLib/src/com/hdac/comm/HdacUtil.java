@@ -25,6 +25,29 @@ import com.hdacSdk.hdacWallet.HdacWalletManager;
 import com.hdacSdk.hdacWallet.HdacWalletUtils;
 import com.hdacSdk.hdacWallet.HdacWalletUtils.NnmberOfWords;
 
+/**
+ * This class provide hdac rpc method 
+ * 
+ * 
+ * @version 0.8
+ * @see     java.io.BufferedReader
+ * @see     java.io.IOException
+ * @see     java.io.InputStreamReader
+ * @see     java.util.ArrayList
+ * @see     java.util.Base64
+ * @see     java.util.List
+ * @see     java.util.Map
+ * @see     org.apache.http.HttpEntity
+ * @see     org.apache.http.client.methods.CloseableHttpResponse
+ * @see     org.apache.http.client.methods.HttpPost
+ * @see     org.apache.http.entity.StringEntity
+ * @see     org.apache.http.impl.client.CloseableHttpClient
+ * @see     org.apache.http.impl.client.HttpClients
+ * @see     org.apache.http.util.EntityUtils
+ * @see     org.json.JSONArray
+ * @see     org.json.JSONException
+ * @see     org.json.JSONObject
+ */
 public class HdacUtil
 {
 	public static HdacWallet generateNewWallet()
@@ -67,6 +90,7 @@ public class HdacUtil
 	{
 		return getDataJSONObject(method, params, null, config);
 	}
+	
 	public static JSONObject getDataJSONObject(String method, Object[] params, JSONObject options, Map<String, Object> config)
 	{
 		String result = null;
@@ -86,10 +110,19 @@ public class HdacUtil
 		return new JSONObject();
 	}
 
+	public static JSONArray getDataJSONArray(String method, JSONObject params, Map<String, Object> config)
+	{
+		Object[] obj = new Object[1];
+		obj[0] = params;
+
+		return getDataJSONArray(method, obj, null, config);
+	}
+	
 	public static JSONArray getDataJSONArray(String method, Object[] params, Map<String, Object> config)
 	{
 		return getDataJSONArray(method, params, null, config);
 	}
+	
 	public static JSONArray getDataJSONArray(String method, Object[] params, JSONObject options, Map<String, Object> config)
 	{
 		try
@@ -111,14 +144,14 @@ public class HdacUtil
 	{
 		return getDataFromRPC(method, params, null, config);
 	}
+	
 	public static String getDataFromRPC(String method, Object[] params, JSONObject options, Map<String, Object> config)
 	{
-		System.out.println("getDataFromRPC method = " + method);
 		String body = "";
 		try
 		{
 			body = getBody(method, params, options);
-			System.out.println("String body = " + body);
+//			System.out.println("String body = " + body);
 		}
 		catch (Exception e)
 		{
@@ -145,7 +178,6 @@ public class HdacUtil
 
 	private static String sendRPC(String body, Map<String, Object> config)
 	{
-		
 		StringBuilder result = new StringBuilder();
 		CloseableHttpResponse response1 = null;
 
@@ -200,6 +232,16 @@ public class HdacUtil
 		}
 
 		return result.toString();
+	}
+
+	public static List<String> encodeSeed(List<String> seed, String key)
+	{
+		List<String> encSeed = new ArrayList<String>();
+		for (String word : seed)
+		{
+			encSeed.add(CipherUtil.AesEncode(word, key));
+		}
+		return encSeed;
 	}
 
 	public static List<String> decodeSeed(List<String> seed, String key)

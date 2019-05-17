@@ -66,7 +66,7 @@ public class HdacMainRefund extends HdacContractRefund
 	}
 
 	@Override
-	protected void refund(Map<String, Object> map, JSONObject resultObj, String txid, Map<String, Object> config)
+	protected void refund(Map<String, Object> map, JSONObject resultObj, String txid)
 	{
 		refund(this.wallet, map, resultObj, this.tokenInfo, this.mainChain, txid);
 	}
@@ -134,14 +134,11 @@ public class HdacMainRefund extends HdacContractRefund
 
 		BigInteger remain = totalBalance.subtract(sendAmount);
 		
-//		sendAmount = sendAmount.subtract(this.fee);
+		sendAmount = sendAmount.subtract(this.fee);
 
-		System.out.println("sendAmount : " + sendAmount);
-		System.out.println("remain : " + remain);
-			
 		if (remain.compareTo(BigInteger.ZERO) < 0)
 			return false;
-		
+
 		Set<String> keySet = recvList.keySet();
 		for (String index : keySet)
 		{
@@ -161,110 +158,8 @@ public class HdacMainRefund extends HdacContractRefund
 				break;
 			}
 		}
+		
+		transaction.addOutput(contractAddress, remain.longValue());		
 		return true;
 	}
-	
-//	//hyyang 
-//	@Override
-//	protected boolean addUnsignedData2(HdacTransaction transaction, Map<String, Object> txMap
-//		, List<Map<String, Object>> senderList, JSONObject resultObj, Map<String, Object> tokenInfo, List<JSONObject> utxos, String dataValue)
-//	{
-//		String tokenName		= StringUtil.nvl(tokenInfo.get("tokenName"));
-//		long swapRatio			= Long.parseLong(StringUtil.nvl(tokenInfo.get("tokenSwapRatio"), "0"));
-//		String remainAddress	= StringUtil.nvl(tokenInfo.get("contractAddress"));
-//
-//		BigInteger sendAmount	= BigInteger.ZERO;	// asset
-//		BigInteger totalBalance = BigInteger.ZERO;	// coin
-//		BigInteger sendCoin		= BigInteger.ZERO;	// coin
-//
-//	   	for (JSONObject utxo : utxos)
-//	   	{
-//			totalBalance = totalBalance.add(utxo.getBigDecimal("amount").multiply(BigDecimal.TEN.pow(8)).toBigInteger());
-//			transaction.addInput(utxo);
-//		}
-//
-//	   	System.out.println("totalBalance : " + totalBalance);
-//
-//		if (totalBalance.compareTo(BigInteger.ZERO) <= 0)
-//			return false;
-//
-//	   	JSONArray voutArr = resultObj.getJSONArray("vout");
-//	   	int voutArrLength = voutArr.length();
-//		if (voutArrLength <= 0)
-//			return false;
-//
-//		for (int i = 0; i < voutArrLength; i++)
-//		{
-//			JSONObject voutObj = voutArr.getJSONObject(i);
-//			JSONObject scriptPubKey = voutObj.getJSONObject("scriptPubKey");
-//			if (scriptPubKey.has("addresses") == false)
-//				continue;
-//
-//			if (tokenInfo.get("contractAddress").equals(scriptPubKey.getJSONArray("addresses").get(0)))
-//			{
-//				JSONArray assetArr = voutObj.getJSONArray("assets");
-//				int assetArrLength = assetArr.length();
-//				for (int j = 0; j < assetArrLength; j++)
-//				{
-//					JSONObject assetObj = assetArr.getJSONObject(j);
-//					if (tokenName.equals(assetObj.get("name")))
-//						sendAmount = sendAmount.add(assetObj.getBigDecimal("qty").multiply(BigDecimal.TEN.pow(8)).toBigInteger());
-//				}
-//			}
-//		}
-//		
-//		if (sendAmount.compareTo(BigInteger.ZERO) <= 0)
-//			return false;
-//
-//		if (sendAmount.compareTo(new BigDecimal(dataValue).multiply(BigDecimal.TEN.pow(8)).toBigInteger()) != 0)
-//			return false;
-//
-//		sendCoin = getCoinValue(sendAmount, swapRatio);
-//
-//		BigInteger remain = totalBalance.subtract(sendCoin);
-//
-//		System.out.println("sendCoin : " + sendCoin);
-//		System.out.println("remain : " + remain);
-//			
-//		if (remain.compareTo(BigInteger.ZERO) < 0)
-//			return false;
-//
-//		for (Map<String, Object> map : senderList)
-//		{
-//			String senderAddress	= StringUtil.nvl(map.get("addr"));
-//			BigInteger assetValue	= new BigDecimal(StringUtil.nvl(map.get("value"), "0")).multiply(BigDecimal.TEN.pow(8)).toBigInteger();
-//			BigInteger value		= BigInteger.ZERO;
-//
-//			if (assetValue.compareTo(sendAmount) >= 0)
-//			{
-//				value = getCoinValue(sendAmount, swapRatio);
-//				sendAmount = BigInteger.ZERO;
-//			}
-//			else
-//			{
-//				value = getCoinValue(assetValue, swapRatio);
-//				sendAmount = sendAmount.subtract(assetValue);
-//			}
-//
-//			if (sendAmount.compareTo(BigInteger.ZERO) <= 0)
-//			{
-//				value = value.subtract(this.fee);
-//
-//				transaction.addOutput(senderAddress, value.longValue());
-//				break;
-//			}
-//			else
-//			{
-//				transaction.addOutput(senderAddress, value.longValue());
-//			}
-//		}
-//
-//		transaction.addOutput(remainAddress, remain.longValue());
-//		return true;
-//	}
-//
-//	private BigInteger getCoinValue(BigInteger value, long swapRatio)
-//	{
-//		return value.divide(BigInteger.valueOf(swapRatio));
-//	}	
 }

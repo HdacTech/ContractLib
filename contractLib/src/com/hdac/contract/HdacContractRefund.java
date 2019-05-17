@@ -1,7 +1,5 @@
 package com.hdac.contract;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,13 +19,12 @@ import com.hdacSdk.hdacWallet.HdacWallet;
 abstract class HdacContractRefund extends HdacContract
 {
 	protected abstract void init();
-	protected abstract void refund(Map<String, Object> map, JSONObject resultObj, String txid, Map<String, Object> config);
+	protected abstract void refund(Map<String, Object> map, JSONObject resultObj, String txid);
 	protected abstract List<JSONObject> addUtxos(Map<String, Object> tokenInfo, Map<String, Object> config);
 	protected abstract void addSenderInfo(JSONObject obj, String tokenName, Map<String, Map<String, Object>> recvMap);
 	protected abstract boolean addUnsignedData(HdacTransaction transaction, Map<String, Object> txMap
 		, Map<String, Map<String, Object>> recvList, JSONObject resultObj, Map<String, Object> tokenInfo, List<JSONObject> utxos);
 
-	
 	protected void refund(List<Map<String, Object>> list, Map<String, Object> config)
 	{
 		if ((list == null) || (list.size() <= 0))
@@ -46,7 +43,7 @@ abstract class HdacContractRefund extends HdacContract
 			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			System.out.println(resultObj);
 
-			refund(map, resultObj, txid, config);
+			refund(map, resultObj, txid);
 //			break;
 		}
 	}
@@ -55,7 +52,6 @@ abstract class HdacContractRefund extends HdacContract
 		, Map<String, Object> tokenInfo, Map<String, Object> config, String txid)
 	{
 		// step 0. gather utxos
-//		List<JSONObject> utxos = getUtxosfromTx(resultObj, StringUtil.nvl(tokenInfo.get("contractAddress")));
 		List<JSONObject> utxos = addUtxos(tokenInfo, config);
 
 		String tokenName = StringUtil.nvl(tokenInfo.get("tokenName"));
@@ -134,39 +130,6 @@ abstract class HdacContractRefund extends HdacContract
 			}
 		}
 		return recvMap;
-	}
-
-	private List<JSONObject> getUtxosfromTx(JSONObject tx, String contractAddress)
-	{
-		List<JSONObject> utxos	= new ArrayList<JSONObject>();
-		String txid				= tx.getString("txid");
-		JSONArray voutArr		= tx.getJSONArray("vout");
-		int voutArrLength		= voutArr.length();
-		for (int i = 0; i < voutArrLength; i++)
-		{
-			JSONObject voutObj = voutArr.getJSONObject(i);
-			JSONObject scriptPubKey = voutObj.getJSONObject("scriptPubKey");
-
-			if (scriptPubKey.has("addresses") && contractAddress.equals(scriptPubKey.getJSONArray("addresses").get(0)))
-			{
-				BigDecimal amount = voutObj.getBigDecimal("value");
-
-				JSONObject utxo = new JSONObject();
-				utxo.put("unspent_hash",	txid);
-				utxo.put("address",			scriptPubKey.getJSONArray("addresses").get(0));
-				utxo.put("scriptPubKey",	scriptPubKey.get("hex"));
-				utxo.put("amount",			amount);
-				utxo.put("vout",			voutObj.getInt("n"));
-				utxo.put("satoshis",		amount.multiply(BigDecimal.TEN.pow(8)).toBigInteger());
-				utxo.put("txid",			txid);
-
-				if (voutObj.has("assets"))
-					utxo.put("assets",		voutObj.getJSONArray("assets"));
-
-				utxos.add(utxo);
-			}
-		}
-		return utxos;
 	}
 
 	private void putSignListToJson(HdacTransaction transaction, HdacWallet wallet, List<JSONObject> utxos)
