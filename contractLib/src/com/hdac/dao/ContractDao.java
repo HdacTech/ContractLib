@@ -4,6 +4,16 @@ import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
+/**
+ * Contract database access object (blockheight, handling txid...)
+ * 
+ * 
+ * @see     java.util.List
+ * @see     java.util.Map
+ * @see     org.apache.ibatis.session.SqlSession
+ * 
+ * @version 0.8
+ */
 public class ContractDao
 {
 	private ContractDao()

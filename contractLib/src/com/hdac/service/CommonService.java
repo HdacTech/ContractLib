@@ -10,6 +10,20 @@ import com.hdac.comm.HdacUtil;
 import com.hdac.dao.CommonDao;
 import com.hdacSdk.hdacWallet.HdacWallet;
 
+
+/**
+ * database informations related blockchain or wallet
+ * 
+ * 
+ * @see     java.util.HashMap
+ * @see     java.util.List
+ * @see     java.util.Map
+ * @see     org.apache.ibatis.session.SqlSession
+ * @see     org.json.JSONArray
+ * @see     org.json.JSONObject
+ * 
+ * @version 0.8
+ */
 public class CommonService
 {
 	private CommonService()

@@ -19,23 +19,33 @@ import com.hdacSdk.hdacWallet.HdacWallet;
 
 /**
  * abstract HdacContractGrab class extends HdacContract
- * (Database SqlSesseion control) 
  * 
  * @version 0.8
- * 
- * @see     import java.math.BigInteger
- * @see     import java.util.HashMap
- * @see     import java.util.Iterator
- * @see     import java.util.List
- * @see     import java.util.Map
- * @see     import org.apache.ibatis.session.SqlSession
- * @see     import org.json.JSONArray
- * @see     import org.json.JSONException
- * @see     import org.json.JSONObject
+ * @see     java.math.BigInteger
+ * @see     java.util.HashMap
+ * @see     java.util.Iterator
+ * @see     java.util.List
+ * @see     java.util.Map
+ * @see     org.apache.ibatis.session.SqlSession
+ * @see     org.json.JSONArray
+ * @see     org.json.JSONException
+ * @see     org.json.JSONObject
  */
 abstract class HdacContractGrab extends HdacContract
 {
+	/**
+	 * abstract init() method
+	 * 
+	 */	
 	protected abstract void init();
+	
+	/**
+	 * abstract getValueSum() method
+	 * 
+	 * @param voutObj (JSONObject) vout object from transaction with contrdact address
+	 * @param tokenName (String) token name 
+	 * @return    (BigInteger) return token value 
+	 */	
 	protected abstract BigInteger getValueSum(JSONObject voutObj, String tokenName);
 
 	/**
@@ -62,9 +72,9 @@ abstract class HdacContractGrab extends HdacContract
 	/**
 	 * get transaction list associated with contract address
 	 * 
-	 * @param txList (List<Map<String, Object>>) get the list transactions associated with contact address
-	 * @param tokenInfo (Map<String, Object>) get the token information
-	 * @param chainInfo (Map<String, Object>) set the chain information to use
+	 * @param txList (List(Map(String, Object))) get the list transactions associated with contact address
+	 * @param tokenInfo (Map(String, Object)) get the token information
+	 * @param chainInfo (Map(String, Object)) set the chain information to use
 	 * @param loopCount (long) Number of blocks to get details
 	 * @return    (long) last block height to get details 
 	 */
@@ -100,7 +110,7 @@ abstract class HdacContractGrab extends HdacContract
 	/**
 	 * get transaction list associated with contract address
 	 * 
-	 * @param txList (List<Map<String, Object>>) get the list transactions associated with contact address
+	 * @param txList (List(Map(String, Object))) get the list transactions associated with contact address
 	 * @param wallet (HdacWallet) get the wallet with address
 	 * @param obj (JSONObject) set the chain information to use
 	 * @param contractAddress (String) contract address to use 
@@ -183,11 +193,11 @@ abstract class HdacContractGrab extends HdacContract
 	/**
 	 * Insert a transaction in the maria db that is associated with contract address.
 	 * 
-	 * @param list (List<Map<String, Object>> list) the list of transactions associated with contract address
+	 * @param list (List(Map(String, Object)) list) the list of transactions associated with contract address
 	 * @param blockHeight (long) get the last blockheight 
-	 * @param chainInfo (Map<String, Object>) set the chain information to use
+	 * @param chainInfo (Map(String, Object)) set the chain information to use
 	 * @return    (int)  Results inserted into db
-	 */	
+	 */
 	protected int insertTxList(List<Map<String, Object>> list, long blockHeight, Map<String, Object> chainInfo)
 	{
 		SqlSession sqlSession = null;

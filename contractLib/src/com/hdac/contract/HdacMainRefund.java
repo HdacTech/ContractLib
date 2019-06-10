@@ -18,6 +18,22 @@ import com.hdac.service.RpcService;
 import com.hdacSdk.hdacWallet.HdacTransaction;
 import com.hdacSdk.hdacWallet.HdacWallet;
 
+/**
+ * abstract HdacMainRefund class extends HdacContractRefund
+ * 
+ * 
+ * @see     java.math.BigDecimal
+ * @see     java.math.BigInteger
+ * @see     java.util.HashMap
+ * @see     java.util.List
+ * @see     java.util.Map
+ * @see     java.util.Set
+ * @see     org.apache.ibatis.session.SqlSession
+ * @see     org.json.JSONArray
+ * @see     org.json.JSONObject
+ * 
+ * @version 0.8
+ */
 public class HdacMainRefund extends HdacContractRefund
 {
 	private Map<String, Object> tokenInfo = null;
@@ -68,7 +84,7 @@ public class HdacMainRefund extends HdacContractRefund
 	@Override
 	protected void refund(Map<String, Object> map, JSONObject resultObj, String txid)
 	{
-		refund(this.wallet, map, resultObj, this.tokenInfo, this.mainChain, txid);
+		refund(this.wallet, map, resultObj, this.tokenInfo, this.mainChain);
 	}
 
 	@Override

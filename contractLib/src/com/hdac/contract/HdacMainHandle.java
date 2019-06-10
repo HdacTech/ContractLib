@@ -18,6 +18,22 @@ import com.hdac.service.RpcService;
 import com.hdacSdk.hdacWallet.HdacTransaction;
 import com.hdacSdk.hdacWallet.HdacWallet;
 
+/**
+ * abstract HdacMainHandle class extends HdacContractHandle
+ * 
+ * 
+ * @see     java.lang.reflect.Method
+ * @see     java.math.BigDecimal
+ * @see     java.math.BigInteger
+ * @see     java.util.HashMap
+ * @see     java.util.List
+ * @see     java.util.Map
+ * @see     org.apache.ibatis.session.SqlSession
+ * @see     org.json.JSONArray
+ * @see     org.json.JSONObject
+ * 
+ * @version 0.8
+ */
 public class HdacMainHandle extends HdacContractHandle
 {
 	private Map<String, Object> tokenInfo = null;
@@ -66,12 +82,14 @@ public class HdacMainHandle extends HdacContractHandle
 	}
 
 	@Override
-	protected void handle(String[] split, Map<String, Object> map, JSONObject resultObj, String txid, Map<String, Object> config)
+	protected void handle(String[] split, Map<String, Object> map, JSONObject resultObj, Map<String, Object> config)
 	{
 		try
 		{
-			Method method = this.getClass().getMethod(split[0], HdacWallet.class, Map.class, JSONObject.class, Map.class, Map.class, Map.class, String.class, String[].class, long.class);
-			method.invoke(this, wallet, map, resultObj, this.tokenInfo, this.mainChain, this.sideChain, txid, split, this.checkBlockHeight);
+//			Method method = this.getClass().getMethod(split[0], HdacWallet.class, Map.class, JSONObject.class, Map.class, Map.class, Map.class, String.class, String[].class, long.class);
+//			method.invoke(this, wallet, map, resultObj, this.tokenInfo, this.mainChain, this.sideChain, txid, split, this.checkBlockHeight);
+			Method method = this.getClass().getMethod(split[0], HdacWallet.class, Map.class, JSONObject.class, Map.class, Map.class, Map.class, String[].class, long.class);
+			method.invoke(this, wallet, map, resultObj, this.tokenInfo, this.mainChain, this.sideChain, split, this.checkBlockHeight);
 		}
 		catch (Exception e)
 		{

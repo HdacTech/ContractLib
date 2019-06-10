@@ -14,17 +14,15 @@ import com.hdac.service.CommonService;
 /**
  * abstract HdacMainGrab class extends HdacContractGrab
  * 
- * @version 0.8
+ * @see     java.math.BigDecimal
+ * @see     java.math.BigInteger
+ * @see     java.util.ArrayList
+ * @see     java.util.List
+ * @see     java.util.Map
+ * @see     org.apache.ibatis.session.SqlSession
+ * @see     org.json.JSONObject
  * 
- * @see     import java.math.BigInteger
- * @see     import java.util.HashMap
- * @see     import java.util.Iterator
- * @see     import java.util.List
- * @see     import java.util.Map
- * @see     import org.apache.ibatis.session.SqlSession
- * @see     import org.json.JSONArray
- * @see     import org.json.JSONException
- * @see     import org.json.JSONObject
+ * @version 0.8
  */
 public class HdacMainGrab extends HdacContractGrab
 {
@@ -32,6 +30,10 @@ public class HdacMainGrab extends HdacContractGrab
 	private Map<String, Object> mainChain = null;
 	private long loopCount = 1;
 
+	/**
+	 * run init method and insert contract txs into database
+	 * 
+	 */		
 	@Override
 	public void run()
 	{
@@ -43,6 +45,10 @@ public class HdacMainGrab extends HdacContractGrab
 		insertTxList(txList, blockHeight, this.mainChain);
 	}
 
+	/**
+	 * connect database and get chain,token informations from database
+	 * 
+	 */		
 	@Override
 	protected void init()
 	{

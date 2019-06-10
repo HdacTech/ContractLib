@@ -12,6 +12,21 @@ import org.json.JSONObject;
 
 import com.hdac.service.CommonService;
 
+/**
+ * abstract HdacSideGrab class extends HdacContractGrab
+ * 
+ * 
+ * @see     java.math.BigDecimal
+ * @see     java.math.BigInteger
+ * @see     java.util.ArrayList
+ * @see     java.util.List
+ * @see     java.util.Map
+ * @see     org.apache.ibatis.session.SqlSession
+ * @see     org.json.JSONArray
+ * @see     org.json.JSONObject
+ * 
+ * @version 0.8
+ */
 public class HdacSideGrab extends HdacContractGrab
 {
 	private Map<String, Object> tokenInfo = null;

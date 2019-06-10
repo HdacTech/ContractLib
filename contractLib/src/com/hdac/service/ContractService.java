@@ -7,6 +7,17 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import com.hdac.dao.ContractDao;
 
+/**
+ * database informations related contract txids
+ * 
+ * 
+ * @see     java.util.HashMap
+ * @see     java.util.List
+ * @see     java.util.Map
+ * @see     org.apache.ibatis.session.SqlSession
+ * 
+ * @version 0.8
+ */
 public class ContractService
 {
 	private ContractService()
@@ -23,8 +34,16 @@ public class ContractService
 
 	public long getBlockHeight(Map<String, Object> paramMap, SqlSession sqlSession)
 	{
+		long height = -1;
+		
 		ContractDao dao = ContractDao.getInstance();
-		return dao.getBlockHeight(paramMap, sqlSession);
+		
+		height = dao.getBlockHeight(paramMap, sqlSession);
+		if (height <= 0)
+		{
+			
+		}
+		return height;
 	}
 
 	public int insertTxList(List<Map<String, Object>> list, long blockHeight, Map<String, Object> chainInfo, SqlSession sqlSession)

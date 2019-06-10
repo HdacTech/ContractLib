@@ -18,6 +18,22 @@ import com.hdac.service.RpcService;
 import com.hdacSdk.hdacWallet.HdacTransaction;
 import com.hdacSdk.hdacWallet.HdacWallet;
 
+/**
+ * abstract HdacSideRefund class extends HdacContractRefund
+ * 
+ * 
+ * @see     java.math.BigDecimal
+ * @see     java.math.BigInteger
+ * @see     java.util.HashMap
+ * @see     java.util.List
+ * @see     java.util.Map
+ * @see     java.util.Set
+ * @see     org.apache.ibatis.session.SqlSession
+ * @see     org.json.JSONArray
+ * @see     org.json.JSONObject
+ * 
+ * @version 0.8
+ */
 public class HdacSideRefund extends HdacContractRefund
 {
 	private Map<String, Object> tokenInfo = null;
@@ -64,7 +80,7 @@ public class HdacSideRefund extends HdacContractRefund
 	@Override
 	protected void refund(Map<String, Object> map, JSONObject resultObj, String txid)
 	{
-		refund(this.wallet, map, resultObj, this.tokenInfo, this.sideChain, txid);
+		refund(this.wallet, map, resultObj, this.tokenInfo, this.sideChain);
 	}
 
 	@Override
@@ -174,7 +190,7 @@ public class HdacSideRefund extends HdacContractRefund
 		for (String recvAddr : keySet)
 		{
 			Map<String, Object> recvMap = recvList.get(recvAddr);
-			String name = StringUtil.nvl(recvMap.get("name"));
+//			String name = StringUtil.nvl(recvMap.get("name"));
 			BigInteger assetValue = new BigDecimal(StringUtil.nvl(recvMap.get("value"), "0")).multiply(BigDecimal.TEN.pow(8)).toBigInteger();
 
 //			BigInteger sendSome = sendAmount.get(name);

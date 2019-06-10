@@ -7,6 +7,16 @@ import org.apache.ibatis.session.SqlSession;
 
 import com.hdac.dao.TokenDao;
 
+/**
+ * database informations related token
+ * 
+ * 
+ * @see     java.util.HashMap
+ * @see     java.util.Map
+ * @see     org.apache.ibatis.session.SqlSession
+ * 
+ * @version 0.8
+ */
 public class TokenService
 {
 	private TokenService()

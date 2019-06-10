@@ -18,28 +18,75 @@ import com.hdacSdk.hdacWallet.HdacWallet;
 
 /**
  * abstract HdacContractHandle class extends HdacContract
- * (Database SqlSesseion control) 
+ * 
+ * @see     java.util.ArrayList
+ * @see     java.util.Iterator
+ * @see     java.util.List
+ * @see     java.util.Map
+ * @see     org.apache.ibatis.session.SqlSession
+ * @see     org.bitcoinj.core.ECKey
+ * @see     org.json.JSONArray
+ * @see     org.json.JSONObject
  * 
  * @version 0.8
- * 
- * @see     import java.util.ArrayList
- * @see     import java.util.Iterator
- * @see     import java.util.List
- * @see     import java.util.Map
- * @see     import org.apache.ibatis.session.SqlSession
- * @see		import org.bitcoinj.core.ECKey
- * @see     import org.json.JSONArray
- * @see     import org.json.JSONObject
  */
 abstract class HdacContractHandle extends HdacContract
 {
+	/**
+	 * set token information, database, and chain information to be connected
+	 * 
+	 */
 	protected abstract void init();
-	protected abstract void handle(String[] split, Map<String, Object> map, JSONObject resultObj, String txid, Map<String, Object> config);
+	
+	/**
+	 * perform the contract action
+	 * 
+	 * @param split (String[]) contract method(split[0]) and parameter values(split[1]...)
+	 * @param map (Map(String, Object)) the chain information to connect
+	 * @param resultObj (JSONObject) the chain information to connect
+	 * @param config (Map(String, Object)) the chain information to connect
+	 */
+	protected abstract void handle(String[] split, Map<String, Object> map, JSONObject resultObj, Map<String, Object> config);
+	
+	/**
+	 * get utxo list with contract address
+	 * 
+	 * @param tokenInfo (Map(String, Object)) contract informations related with issuing token
+	 * @param config (Map(String, Object)) the chain information to connect
+	 * @return    (List(JSONObject)) return UTXO list to use
+	 */	
 	protected abstract List<JSONObject> addUtxos(Map<String, Object> tokenInfo, Map<String, Object> config);
+	
+	/**
+	 * get address and tokenname from contract txid object
+	 * 
+	 * @param obj (JSONObject) json object with send address 
+	 * @param tokenName (String) token name
+	 * @return    (Map(String, Objedt)) return address and tokenname
+	 */	
 	protected abstract Map<String, Object> getSenderInfo(JSONObject obj, String tokenName);
+	
+	/**
+	 * Create a transaction with a new contract
+	 * 
+	 * @param transaction (HdacTransaction) json object with send address 
+	 * @param txMap (Map(String, Object)) transaction informations from main blockchain 
+	 * @param senderList (List(Map(String, Object))) address list to send amount of coin or token
+	 * @param resultObj (JSONObject) transaction object data
+	 * @param tokenInfo (Map(String, Object)) contract informations related with issuing token
+	 * @param utxos (List(JSONObject)) destination blockchain utxos
+	 * @param dataValue (String) contract amount to swap
+	 * @return    (boolean) return true if succeed
+	 */	
 	protected abstract boolean addUnsignedData(HdacTransaction transaction, Map<String, Object> txMap
 		, List<Map<String, Object>> senderList, JSONObject resultObj, Map<String, Object> tokenInfo, List<JSONObject> utxos, String dataValue);
 
+	/**
+	 * invoke each txid handle method with a txid list that generates the contract action.
+	 * 
+	 * @param list (List(Map(String, Object))) the txid information list to generate contract action
+	 * @param config (Map(String, Object)) the chain information to connect
+	 */	
 	protected void handle(List<Map<String, Object>> list, Map<String, Object> config)
 	{
 		if ((list == null) || (list.size() <= 0))
@@ -62,13 +109,25 @@ abstract class HdacContractHandle extends HdacContract
 			System.out.println(data);
 			String[] split = data.split(",");
 
-			handle(split, map, resultObj, txid, config);
+			handle(split, map, resultObj, config);
 //			break;
 		}
 	}
 
+	/**
+	 * The method defined in contract handles the swap of both block chains.
+	 * 
+	 * @param wallet (HdacWallet) hdac wallet for sign
+	 * @param txMap (Map(String, Object)) transaction informations from main blockchain 
+	 * @param resultObj (JSONObject)  transaction informations from main blockchain 
+	 * @param tokenInfo (Map(String, Object)) contract informations related with issuing token
+	 * @param fromChain (Map(String, Object)) starting blockchain 
+	 * @param toChain (Map(String, Object)) destination blockchain
+	 * @param split (String[]) change data-string into split-data from contract transaction 
+	 * @param checkBlockHeight (long) set block-range to make contract
+	 */
 	public void swap(HdacWallet wallet, Map<String, Object> txMap, JSONObject resultObj
-		, Map<String,Object> tokenInfo, Map<String,Object> fromChain, Map<String,Object> toChain, String txid, String[] split, long checkBlockHeight)
+		, Map<String,Object> tokenInfo, Map<String,Object> fromChain, Map<String,Object> toChain, String[] split, long checkBlockHeight)
 	{
 		RpcService service = RpcService.getInstance();
 
@@ -83,7 +142,8 @@ abstract class HdacContractHandle extends HdacContract
 
 		String tokenName = StringUtil.nvl(tokenInfo.get("tokenName"));
 		// step 1. split transaction by vin addresses
-		List<Map<String, Object>> senderList = splitTransaction(resultObj, txid, tokenName, fromChain);
+//		List<Map<String, Object>> senderList = splitTransaction(resultObj, txid, tokenName, fromChain);
+		List<Map<String, Object>> senderList = splitTransaction(resultObj, tokenName, fromChain);
 		if (senderList.size() <= 0)
 			return;
 		System.out.println(senderList);
@@ -125,7 +185,16 @@ abstract class HdacContractHandle extends HdacContract
 		}
 	}
 
-	private List<Map<String, Object>> splitTransaction(JSONObject resultObj, String txid, String tokenName, Map<String, Object> config)
+	/**
+	 * get a list of the send address and token information of the transaction.
+	 * 
+	 * @param resultObj (JSONObject) json object with contract transaction 
+	 * @param tokenName (String) token name
+	 * @param config (Map(String, Object)) the chain information to connect
+	 * @return    (List(Map(String, Object))) return map list (included vin addresses and values)
+	 */		
+//	private List<Map<String, Object>> splitTransaction(JSONObject resultObj, String txid, String tokenName, Map<String, Object> config)
+	private List<Map<String, Object>> splitTransaction(JSONObject resultObj, String tokenName, Map<String, Object> config)
 	{
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
@@ -159,6 +228,13 @@ abstract class HdacContractHandle extends HdacContract
 		return list;
 	}
 
+	/**
+	 * Add a signature to an unsigned transaction object.
+	 * 
+	 * @param transaction (HdacTransaction) transaction object without signature
+	 * @param wallet (HdacWallet) hdac wallet with private key
+	 * @param utxos (List(JSONObject)) vin list needed for signature
+	 */		
 	private void putSignListToJson(HdacTransaction transaction, HdacWallet wallet, List<JSONObject> utxos)
 	{
 		int len = utxos.size();

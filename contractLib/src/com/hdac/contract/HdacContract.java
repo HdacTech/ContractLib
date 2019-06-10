@@ -20,7 +20,6 @@ public abstract class HdacContract
 	 * set SqlSessionFactory
 	 * 
 	 * @param SqlSessionFactory	SqlSessionFactory
-	 * @return          void
 	 */	
 	public void setSqlSessionFactory(SqlSessionFactory SqlSessionFactory)
 	{
@@ -30,7 +29,6 @@ public abstract class HdacContract
 	/**
 	 * get SqlSession
 	 * 
-	 * @param void
 	 * @return    (SqlSession) current SqlSession
 	 */	
 	protected SqlSession getSqlSession()

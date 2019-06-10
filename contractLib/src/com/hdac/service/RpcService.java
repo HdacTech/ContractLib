@@ -17,6 +17,23 @@ import com.hdac.comm.StringUtil;
 import com.hdacSdk.hdacWallet.HdacTransaction;
 import com.hdacSdk.hdacWallet.HdacWallet;
 
+/**
+ * RPC service
+ * 
+ * 
+ * @see     java.util.List
+ * @see     java.math.BigDecimal
+ * @see     java.math.BigInteger
+ * @see     java.util.ArrayList
+ * @see     java.util.List
+ * @see     java.util.Map
+ * @see     org.bitcoinj.core.ECKey
+ * @see     org.json.JSONArray
+ * @see     org.json.JSONException
+ * @see     org.json.JSONObject
+ * 
+ * @version 0.8
+ */
 public class RpcService
 {
 	private RpcService()
@@ -31,6 +48,13 @@ public class RpcService
 		private static final RpcService INSTANCE = new RpcService();  
 	}
 
+	/**
+	 * get the information of all transaction informations of selected block.
+	 * 
+	 * @param blockHeight (long) block index
+	 * @param config (Map(String, Object)) the chain information to connect
+	 * @return    (JSONObject) return block informations
+	 */	
 	public JSONObject getblock(long blockHeight, Map<String, Object> config)
 	{
 		Object[] params = new Object[2];
@@ -39,7 +63,13 @@ public class RpcService
 
 		return HdacUtil.getDataJSONObject("getblock", params, config);
 	}
-
+	
+	/**
+	 * get the block count
+	 * 
+	 * @param config (Map(String, Object)) the chain information to connect
+	 * @return    (JSONObject) return block informations
+	 */	
 	public long getBlockCount(Map<String, Object> config) throws JSONException
 	{
 		String strBlockCount = HdacUtil.getDataFromRPC("getblockcount", new String[0], config);
@@ -47,6 +77,13 @@ public class RpcService
 		return objBlockCount.getLong("result");
 	}
 
+	/**
+	 * get the information of all transaction informations of selected block.
+	 * 
+	 * @param txid (String) transaction hash value to get raw data
+	 * @param config (Map(String, Object)) the chain information to connect
+	 * @return    (JSONObject) return transaction informations
+	 */	
 	public JSONObject getRawTransaction(String txid, Map<String, Object> config)
 	{
 		Object[] params = new Object[2];
@@ -56,6 +93,14 @@ public class RpcService
 		return HdacUtil.getDataJSONObject("getrawtransaction", params, config);
 	}
 
+
+	/**
+	 * get the information of all transaction informations of selected block.
+	 * 
+	 * @param paramMap (Map(String, Object)) address,token data to get the list of utxos
+	 * @param config (Map(String, Object)) the chain information to connect
+	 * @return    (List(JSONObject)) return utxo list
+	 */	
 	public List<JSONObject> getUtxos(Map<String, Object> paramMap, Map<String, Object> config) throws JSONException
 	{
 		List<JSONObject> list = new ArrayList<JSONObject>();
@@ -233,6 +278,14 @@ public class RpcService
 		return "";
 	}
 
+
+	/**
+	 * get asset utxos of addresses,token
+	 * 
+	 * @param paramMap (Map(String, Object)) address,token data to get the list of utxos
+	 * @param config (Map(String, Object)) the chain information to connect
+	 * @return    (List(JSONObject)) return utxo list
+	 */	
 	public List<JSONObject> getAssetUtxos(Map<String, Object> paramMap, Map<String, Object> config)
 	{
 		List<JSONObject> listMap = new ArrayList<JSONObject>();
@@ -282,11 +335,25 @@ public class RpcService
 		return listMap;
 	}
 
+
+	/**
+	 * get asset utxos of addresses,token
+	 * 
+	 * @param transaction (HdacTransaction) make transaction object to hex string 
+	 * @return    (String) return hex string
+	 */
 	public String makeRawTransaction(HdacTransaction transaction)
 	{
 		return StringUtil.toSmallLetter(transaction.getTxBuilder().build().toHex(), 0);
 	}
 
+	/**
+	 * broadcast transaction to config blockchain
+	 * 
+	 * @param rawTx (String) raw transaction hex-data 
+	 * @param config (Map(String, Object)) the chain information to connect
+	 * @return    (String) return txid
+	 */	
 	public String sendRawTransaction(String rawTx, Map<String, Object> config) throws JSONException
 	{
 		Object[] params = new Object[1];
@@ -301,6 +368,14 @@ public class RpcService
 		return null;
 	}
 
+
+	/**
+	 * issue token to config blockchain
+	 * 
+	 * @param paramMap (Map(String, Object)) informations required to issue the token
+	 * @param config (Map(String, Object)) the chain information to connect
+	 * @return    (String) return issued txid
+	 */	
 	public String issueToken(Map<String, Object> paramMap, Map<String, Object> config) throws JSONException
 	{
 //		JSONObject tokenParams = new JSONObject();
@@ -332,6 +407,14 @@ public class RpcService
 		return null;
 	}
 
+	/**
+	 * register contract informations to main blockchain
+	 * 
+	 * @param wallet (HdacWallet) hdac wallet for sign
+	 * @param data (JSONArray) utxo json array 
+	 * @param paramMap (Map(String, Object)) Information required to register a contract, including token information
+	 * @return    (String) return raw transaction hex-string
+	 */		
 	public String makeRawTransaction(HdacWallet wallet, JSONArray data, Map<String, Object> paramMap)
 	{
 		HdacTransaction transaction = new HdacTransaction(wallet.getNetworkParams());

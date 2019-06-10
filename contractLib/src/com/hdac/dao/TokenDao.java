@@ -5,6 +5,17 @@ import org.apache.ibatis.session.SqlSession;
 
 import com.hdac.comm.StringUtil;
 
+
+/**
+ * Token database access object (token no, token info)
+ * 
+ * 
+ * @see     java.util.List
+ * @see     java.util.Map
+ * @see     org.apache.ibatis.session.SqlSession
+ * 
+ * @version 0.8
+ */
 public class TokenDao
 {
 	private TokenDao()
