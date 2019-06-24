@@ -3,10 +3,10 @@ Hdac ContractLib
 
 ContractLib
 -----------
-The released ContractLib is a lib written to work according to the method written in ContractLib.
-Currently, the swap method is registered, and if it is not a swap method, the structure is created so that it is automatically refunded.
-The method calls the Hdac API as a Java method using the HdacJavaLib file included in the method.
-You can find out how to use the source code of [BridgeNode-ContractService](https://github.com/Hdactech/BridgeNode-ContractService).
+The released ContractLib is a lib that has been written according to the method in ContractLib. 
+Currently, the swap method is registered, and the structure supports automatic refund when it is not a swap method.
+The method calls the Hdac API as a Java method with using HdacJavaLib file included in the method.
+Please check the source code of [BridgeNode-ContractService](https://github.com/Hdactech/BridgeNode-ContractService) to see how it works.
 
 
 Development environment
