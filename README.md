@@ -35,4 +35,6 @@ Getting Started
 
 Hdac contractlib is licensed under the [MIT License](http://opensource.org/licenses/MIT).
 
-Copyright (c) 2018-2019 Hdac Technology AG
+Copyright (c) 2018-2019 Hdac Technology AG  
+
+_A detailed description of the docker setting and operation can be found here [Bridgenode docker hub](https://hub.docker.com/r/hdac/bridgenode)._
